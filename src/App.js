@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Search from "./components/Search";
+
+import { questions } from "./data/questions";
+import Results from "./components/Results";
+
+export default class App extends Component {
+  state = { search: "", questions: questions, matches: [] };
+
+  updateSearch = term => {
+    this.setState({ search: term.toLowerCase() });
+    this.compareAndFilter(term);
+  };
+
+  compareAndFilter = term => {
+    this.setState({
+      matches: this.state.questions.filter(question => {
+        return question.q.toLocaleLowerCase().includes(term);
+      })
+    });
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Search updateSearch={this.updateSearch} />
+        <Results results={this.state.matches} />
+      </div>
+    );
+  }
 }
-
-export default App;
